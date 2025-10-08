@@ -1,3 +1,5 @@
+import classNames from 'classnames';
+
 type OfferCardProps = {
   title: string;
   type: string;
@@ -45,9 +47,9 @@ function OfferCard({
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button
-            className={`place-card__bookmark-button button ${
-              isFavorite ? 'place-card__bookmark-button--active' : ''
-            }`}
+            className={classNames('place-card__bookmark-button', 'button', {
+              'place-card__bookmark-button--active': isFavorite,
+            })}
             type="button"
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
