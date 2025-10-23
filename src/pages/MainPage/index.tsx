@@ -1,10 +1,13 @@
-import OfferCard from '../../components/OfferCard';
+import { Offer } from '../../mocks/offers';
+import OfferList from '../../components/OfferList';
+import { Link } from 'react-router-dom';
 
 type MainPageProps = {
   offerCount: number;
+  offers: Offer[];
 };
 
-function MainPage({ offerCount }: MainPageProps): JSX.Element {
+function MainPage({ offerCount, offers }: MainPageProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -24,21 +27,21 @@ function MainPage({ offerCount }: MainPageProps): JSX.Element {
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a
+                  <Link
+                    to="/favorites"
                     className="header__nav-link header__nav-link--profile"
-                    href="#"
                   >
                     <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">
                       Oliver.conner@gmail.com
                     </span>
                     <span className="header__favorite-count">3</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
+                  <Link to="/login" className="header__nav-link">
+                    <span className="header__signout">Sign in</span>
+                  </Link>
                 </li>
               </ul>
             </nav>
@@ -118,49 +121,7 @@ function MainPage({ offerCount }: MainPageProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <OfferCard
-                  title="Beautiful & luxurious apartment at great location"
-                  type="Apartment"
-                  price={120}
-                  rating={4.0}
-                  image="img/apartment-01.jpg"
-                  isPremium
-                />
-
-                <OfferCard
-                  title="Wood and stone place"
-                  type="Room"
-                  price={80}
-                  rating={4.0}
-                  image="img/room.jpg"
-                  isFavorite
-                />
-
-                <OfferCard
-                  title="Canal View Prinsengracht"
-                  type="Apartment"
-                  price={132}
-                  rating={4.0}
-                  image="img/apartment-02.jpg"
-                />
-
-                <OfferCard
-                  title="Nice, cozy, warm big bed apartment"
-                  type="Apartment"
-                  price={180}
-                  rating={5.0}
-                  image="img/apartment-03.jpg"
-                  isPremium
-                />
-
-                <OfferCard
-                  title="Wood and stone place"
-                  type="Room"
-                  price={80}
-                  rating={4.0}
-                  image="img/room.jpg"
-                  isFavorite
-                />
+                <OfferList offers={offers} />
               </div>
             </section>
             <div className="cities__right-section">
