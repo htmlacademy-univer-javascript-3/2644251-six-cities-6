@@ -5,24 +5,26 @@ import LoginPage from './pages/LoginPage';
 import OfferPage from './pages/OfferPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PrivateRoute from './components/PrivateRoute';
+import { Offer } from './mocks/offers';
 
 type AppProps = {
   offerCount: number;
+  offers: Offer[];
 };
 
-function App({ offerCount }: AppProps): JSX.Element {
+function App({ offerCount, offers }: AppProps): JSX.Element {
   const IS_AUTHORIZED = false;
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<MainPage offerCount={offerCount} />}></Route>
+          <Route index element={<MainPage offerCount={offerCount} offers={offers} />}></Route>
           <Route
             path="favorites"
             element={
               <PrivateRoute isAuthorized={IS_AUTHORIZED}>
-                <FavoritesPage />
+                <FavoritesPage offers={offers} />
               </PrivateRoute>
             }
           />

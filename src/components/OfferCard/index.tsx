@@ -1,6 +1,8 @@
 import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 
 type OfferCardProps = {
+  id: number;
   title: string;
   type: string;
   price: number;
@@ -11,6 +13,7 @@ type OfferCardProps = {
 };
 
 function OfferCard({
+  id,
   title,
   type,
   price,
@@ -30,7 +33,7 @@ function OfferCard({
       )}
 
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <Link to={`/offer/${id}`}>
           <img
             className="place-card__image"
             src={image}
@@ -38,7 +41,7 @@ function OfferCard({
             height="200"
             alt={title}
           />
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -67,7 +70,7 @@ function OfferCard({
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{title}</a>
+          <Link to={`/offer/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>
