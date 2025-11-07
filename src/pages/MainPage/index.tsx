@@ -1,5 +1,6 @@
 import { Offer } from '../../mocks/offers';
 import OfferList from '../../components/OfferList';
+import Map from '../../components/Map';
 import { Link } from 'react-router-dom';
 
 type MainPageProps = {
@@ -125,7 +126,7 @@ function MainPage({ offerCount, offers }: MainPageProps): JSX.Element {
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <Map offers={offers} />
             </div>
           </div>
         </div>
