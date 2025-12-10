@@ -6,11 +6,13 @@ import { Offer } from '../../mocks/offers';
 type MapProps = {
   offers: Offer[];
   className?: string;
+  hoveredOfferId: number | null;
 };
 
 const Map = ({
   offers,
   className = 'cities__map map',
+  hoveredOfferId,
 }: MapProps): JSX.Element => {
   const mapRef = useRef<HTMLElement | null>(null);
   const mapInstance = useRef<LeafletMap | null>(null);
@@ -37,13 +39,21 @@ const Map = ({
       });
 
       offers.forEach((offer) => {
+        const icon = leaflet.icon({
+          iconUrl:
+            offer.id === hoveredOfferId
+              ? '/img/pin-active.svg'
+              : '/img/pin.svg',
+          iconSize: [27, 39],
+        });
+
         leaflet
-          .marker([offer.location.latitude, offer.location.longitude])
+          .marker([offer.location.latitude, offer.location.longitude], { icon })
           .addTo(mapInstance.current!)
           .bindPopup(offer.title);
       });
     }
-  }, [offers]);
+  }, [hoveredOfferId, offers]);
 
   return <section className={className} ref={mapRef}></section>;
 };
