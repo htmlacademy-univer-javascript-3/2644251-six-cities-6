@@ -4,24 +4,33 @@ import { Offer } from '../../mocks/offers';
 
 type OfferListProps = {
   offers: Offer[];
+  onHoverOffer?: (id: number | null) => void;
 };
 
-function OfferList({ offers }: OfferListProps): JSX.Element {
-  const [activeOfferId, setActiveOfferId] = useState<number | null>(null);
+function OfferList({ offers, onHoverOffer }: OfferListProps) {
+  const [, setActiveOfferId] = useState<number | null>(null);
+
+  const handleMouseEnter = (id: number) => {
+    setActiveOfferId(id);
+    onHoverOffer?.(id);
+  };
+
+  const handleMouseLeave = () => {
+    setActiveOfferId(null);
+    onHoverOffer?.(null);
+  };
 
   return (
     <div className="cities__places-list places__list tabs__content">
       {offers.map((offer) => (
         <div
           key={offer.id}
-          onMouseEnter={() => setActiveOfferId(offer.id)}
-          onMouseLeave={() => setActiveOfferId(null)}
+          onMouseEnter={() => handleMouseEnter(offer.id)}
+          onMouseLeave={handleMouseLeave}
         >
           <OfferCard {...offer} />
         </div>
       ))}
-
-      {<p>Active offer id: {activeOfferId}</p>}
     </div>
   );
 }

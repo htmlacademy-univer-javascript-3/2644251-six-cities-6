@@ -7,10 +7,12 @@ import { offers } from '../../mocks/offers';
 import ReviewList from '../../components/ReviewList';
 import Map from '../../components/Map';
 import OfferList from '../../components/OfferList';
+import { useState } from 'react';
 
 function Offer(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const offer = offers.find((o) => o.id === Number(id));
+  const [hoveredOfferId, setHoveredOfferId] = useState<number | null>(null);
 
   if (!offer) {
     return <p>Offer not found</p>;
@@ -193,14 +195,18 @@ function Offer(): JSX.Element {
               </section>
             </div>
           </div>
-          <Map offers={nearbyOffers} className="offer__map map" />
+          <Map
+            offers={nearbyOffers}
+            hoveredOfferId={hoveredOfferId}
+            className="offer__map map"
+          />
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <OfferList offers={nearbyOffers} />
+            <OfferList offers={nearbyOffers} onHoverOffer={setHoveredOfferId} />
           </section>
         </div>
       </main>
