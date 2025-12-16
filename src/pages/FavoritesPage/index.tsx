@@ -1,6 +1,6 @@
-import { Offer } from '../../mocks/offers';
 import OfferCard from '../../components/OfferCard';
 import { Link } from 'react-router-dom';
+import { Offer } from '../../store/offers/types';
 
 type FavoritesPageProps = {
   offers: Offer[];
