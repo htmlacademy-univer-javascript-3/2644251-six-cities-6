@@ -6,10 +6,12 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useMemo, useState } from 'react';
+import Spinner from '../../components/Spinner';
 
 function MainPage(): JSX.Element {
-  const city = useSelector((state: RootState) => state.city);
-  const allOffers = useSelector((state: RootState) => state.offers);
+  const city = useSelector((state: RootState) => state.offers.city);
+  const { isLoading } = useSelector((state: RootState) => state.offers);
+  const allOffers = useSelector((state: RootState) => state.offers.offers);
   const offers = allOffers.filter((o) => o.city.name === city);
   const [hoveredOfferId, setHoveredOfferId] = useState<number | null>(null);
 
@@ -81,14 +83,20 @@ function MainPage(): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">
-                {offerCount} places to stay in {city}
-              </b>
-              <SortOptions value={sortType} onChange={setSortType} />
-              <OfferList
-                offers={sortedOffers}
-                onHoverOffer={setHoveredOfferId}
-              />
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <>
+                  <b className="places__found">
+                    {offerCount} places to stay in {city}
+                  </b>
+                  <SortOptions value={sortType} onChange={setSortType} />
+                  <OfferList
+                    offers={sortedOffers}
+                    onHoverOffer={setHoveredOfferId}
+                  />{' '}
+                </>
+              )}
             </section>
             <div className="cities__right-section">
               <Map offers={sortedOffers} hoveredOfferId={hoveredOfferId} />

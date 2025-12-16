@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import leaflet, { Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Offer } from '../../mocks/offers';
+import { Offer } from '../../store/offers/types';
 
 type MapProps = {
   offers: Offer[];
@@ -20,7 +20,7 @@ const Map = ({
   useEffect(() => {
     if (mapRef.current !== null && mapInstance.current === null) {
       mapInstance.current = leaflet.map(mapRef.current, {
-        center: [52.3909553943508, 4.85309666406198],
+        center: [48.86709, 2.36491],
         zoom: 12,
       });
 

@@ -7,7 +7,7 @@ type OfferCardProps = {
   type: string;
   price: number;
   rating: number;
-  image: string;
+  previewImage: string;
   isPremium?: boolean;
   isFavorite?: boolean;
 };
@@ -18,7 +18,7 @@ function OfferCard({
   type,
   price,
   rating,
-  image,
+  previewImage,
   isPremium = false,
   isFavorite = false,
 }: OfferCardProps): JSX.Element {
@@ -36,7 +36,7 @@ function OfferCard({
         <Link to={`/offer/${id}`}>
           <img
             className="place-card__image"
-            src={image}
+            src={previewImage}
             width="260"
             height="200"
             alt={title}

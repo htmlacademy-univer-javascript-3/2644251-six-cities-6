@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { changeCity, loadOffers } from './action';
-import { Offer, offers } from '../mocks/offers';
+import { Offer } from '../store/offers/types.ts';
 
 type State = {
   city: string;
@@ -9,7 +9,7 @@ type State = {
 
 const initialState: State = {
   city: 'Paris',
-  offers: offers,
+  offers: [],
 };
 
 export const reducer = createReducer(initialState, (builder) => {

@@ -1,16 +1,19 @@
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import CommentForm from '../../components/CommentForm';
-import { reviews } from '../../mocks/reviews';
-import { offers } from '../../mocks/offers';
 
 import ReviewList from '../../components/ReviewList';
 import Map from '../../components/Map';
 import OfferList from '../../components/OfferList';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 function Offer(): JSX.Element {
   const { id } = useParams<{ id: string }>();
+  const { offers } = useSelector((state: RootState) => state.offers);
+  const { reviews } = useSelector((state: RootState) => state.reviews);
+
   const offer = offers.find((o) => o.id === Number(id));
   const [hoveredOfferId, setHoveredOfferId] = useState<number | null>(null);
 
