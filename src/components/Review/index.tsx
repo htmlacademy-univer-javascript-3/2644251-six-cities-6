@@ -1,14 +1,7 @@
+import { Review as ReviewType } from '../../store/reviews/types';
+
 type ReviewProps = {
-  review: {
-    id: number;
-    user: {
-      name: string;
-      avatarUrl: string;
-    };
-    rating: number;
-    comment: string;
-    date: string;
-  };
+  review: ReviewType;
 };
 
 function Review({ review }: ReviewProps): JSX.Element {

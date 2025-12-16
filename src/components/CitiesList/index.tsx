@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { changeCity } from '../../store/action';
 import { RootState } from '../../store';
+import { setCity } from '../../store/offers/reducer';
 
 const cities = [
   'Paris',
@@ -13,7 +13,7 @@ const cities = [
 
 export default function CitiesList() {
   const dispatch = useDispatch();
-  const activeCity = useSelector((state: RootState) => state.city);
+  const activeCity = useSelector((state: RootState) => state.offers.city);
 
   return (
     <ul className="locations__list tabs__list">
@@ -22,7 +22,10 @@ export default function CitiesList() {
           <a
             className={`locations__item-link tabs__item
               ${city === activeCity ? 'tabs__item--active' : ''}`}
-            onClick={() => dispatch(changeCity(city))}
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(setCity(city));
+            }}
           >
             <span>{city}</span>
           </a>
