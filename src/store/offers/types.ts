@@ -23,3 +23,10 @@ export type Offer = {
   };
   city: City;
 };
+
+export type OffersState = {
+  city: string;
+  offers: Offer[];
+  isLoading: boolean;
+  error: string | null;
+};
