@@ -7,15 +7,20 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useMemo, useState } from 'react';
 import Spinner from '../../components/Spinner';
+import { AuthorizationStatus } from '../../const';
 
 function MainPage(): JSX.Element {
   const city = useSelector((state: RootState) => state.offers.city);
   const { isLoading } = useSelector((state: RootState) => state.offers);
+
   const allOffers = useSelector((state: RootState) => state.offers.offers);
   const offers = allOffers.filter((o) => o.city.name === city);
   const [hoveredOfferId, setHoveredOfferId] = useState<number | null>(null);
-
   const [sortType, setSortType] = useState('Popular');
+
+  const authStatus = useSelector(
+    (state: RootState) => state.auth.authorizationStatus
+  );
 
   const sortedOffers = useMemo(() => {
     switch (sortType) {
@@ -49,23 +54,27 @@ function MainPage(): JSX.Element {
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link
-                    to="/favorites"
-                    className="header__nav-link header__nav-link--profile"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
-                    </span>
-                    <span className="header__favorite-count">3</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <Link to="/login" className="header__nav-link">
-                    <span className="header__signout">Sign in</span>
-                  </Link>
-                </li>
+                {authStatus === AuthorizationStatus.Auth ? (
+                  <li className="header__nav-item user">
+                    <Link
+                      to="/favorites"
+                      className="header__nav-link header__nav-link--profile"
+                    >
+                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <span className="header__user-name user__name">
+                        Oliver.conner@gmail.com
+                      </span>
+                      <span className="header__favorite-count">3</span>
+                    </Link>
+                    <button className="header__logout">Sign out</button>
+                  </li>
+                ) : (
+                  <li className="header__nav-item">
+                    <Link to="/login" className="header__nav-link">
+                      <span className="header__signout">Sign in</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
           </div>

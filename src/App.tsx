@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Provider, useSelector } from 'react-redux';
-import { RootState, store } from './store';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState, store } from './store';
 import MainPage from './pages/MainPage';
 import FavoritesPage from './pages/FavoritesPage';
 import LoginPage from './pages/LoginPage';
@@ -9,15 +9,18 @@ import NotFoundPage from './pages/NotFoundPage';
 import PrivateRoute from './components/PrivateRoute';
 import { useEffect } from 'react';
 import { loadOffers } from './store/offers/reducer.ts';
+import { checkAuth } from './store/auth/reducer.ts';
 
 function App(): JSX.Element {
-  const IS_AUTHORIZED = false;
-
+  const dispatch = useDispatch<AppDispatch>();
+  const offers = useSelector((state: RootState) => state.offers.offers);
+  const authStatus = useSelector(
+    (state: RootState) => state.auth.authorizationStatus
+  );
   useEffect(() => {
-    store.dispatch(loadOffers());
-  }, []);
-
-  const { offers } = useSelector((state: RootState) => state.offers);
+    dispatch(loadOffers());
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   return (
     <Provider store={store}>
@@ -28,7 +31,7 @@ function App(): JSX.Element {
             <Route
               path="favorites"
               element={
-                <PrivateRoute isAuthorized={IS_AUTHORIZED}>
+                <PrivateRoute authorizationStatus={authStatus}>
                   <FavoritesPage offers={offers} />
                 </PrivateRoute>
               }

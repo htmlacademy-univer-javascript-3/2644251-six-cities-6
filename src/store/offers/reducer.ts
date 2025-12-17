@@ -1,13 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import api from '../../api';
-import { Offer } from './types';
-
-export type OffersState = {
-  city: string;
-  offers: Offer[];
-  isLoading: boolean;
-  error: string | null;
-};
+import { Offer, OffersState } from './types';
 
 const initialState: OffersState = {
   city: 'Paris',
@@ -60,7 +53,7 @@ export const loadOffers =
         dispatch(loadOffersSuccess(response.data));
       } catch (err) {
         const message =
-        err instanceof Error ? err.message : 'Failed to load offers';
+          err instanceof Error ? err.message : 'Failed to load offers';
         dispatch(loadOffersFailure(message));
       }
     };
