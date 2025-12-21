@@ -1,26 +1,28 @@
-import OfferList from '../../components/OfferList';
-import Map from '../../components/Map';
+import MemoizedOfferList from '../../components/OfferList';
+import MemoizedMap from '../../components/Map';
 import CitiesList from '../../components/CitiesList';
 import SortOptions from '../../components/SortOptions';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Spinner from '../../components/Spinner';
 import { AuthorizationStatus } from '../../const';
+import { selectActiveCity, selectAllOffers } from '../../store/offers/selectors';
+import { selectAuthStatus } from '../../store/auth/selectors';
+import { selectOfferLoading } from '../../store/offer/selectors';
 
 function MainPage(): JSX.Element {
-  const city = useSelector((state: RootState) => state.offers.city);
-  const { isLoading } = useSelector((state: RootState) => state.offers);
-
-  const allOffers = useSelector((state: RootState) => state.offers.offers);
+  const city = useSelector(selectActiveCity);
+  const isLoading = useSelector(selectOfferLoading);
+  const allOffers = useSelector(selectAllOffers);
   const offers = allOffers.filter((o) => o.city.name === city);
   const [hoveredOfferId, setHoveredOfferId] = useState<number | null>(null);
   const [sortType, setSortType] = useState('Popular');
+  const handleHover = useCallback((id: number | null) => {
+    setHoveredOfferId(id);
+  }, []);
 
-  const authStatus = useSelector(
-    (state: RootState) => state.auth.authorizationStatus
-  );
+  const authStatus = useSelector(selectAuthStatus);
 
   const sortedOffers = useMemo(() => {
     switch (sortType) {
@@ -100,15 +102,18 @@ function MainPage(): JSX.Element {
                     {offerCount} places to stay in {city}
                   </b>
                   <SortOptions value={sortType} onChange={setSortType} />
-                  <OfferList
+                  <MemoizedOfferList
                     offers={sortedOffers}
-                    onHoverOffer={setHoveredOfferId}
-                  />{' '}
+                    onHoverOffer={handleHover}
+                  />
                 </>
               )}
             </section>
             <div className="cities__right-section">
-              <Map offers={sortedOffers} hoveredOfferId={hoveredOfferId} />
+              <MemoizedMap
+                offers={sortedOffers}
+                hoveredOfferId={hoveredOfferId}
+              />
             </div>
           </div>
         </div>

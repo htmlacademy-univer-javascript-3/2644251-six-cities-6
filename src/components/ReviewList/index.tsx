@@ -1,5 +1,6 @@
 import Review from '../Review';
 import { Review as ReviewType } from '../../store/reviews/types';
+import React from 'react';
 
 type ReviewListProps = {
   reviews: ReviewType[];
@@ -20,4 +21,5 @@ function ReviewList({ reviews }: ReviewListProps): JSX.Element {
   );
 }
 
-export default ReviewList;
+const MemoizedReviewList = React.memo(ReviewList);
+export default MemoizedReviewList;
