@@ -1,8 +1,24 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { postReview } from '../../store/reviews/reducer';
+import type { AppDispatch, RootState } from '../../store';
+import { useParams } from 'react-router-dom';
+import { AuthorizationStatus } from '../../const';
 
-function CommentForm(): JSX.Element {
+function CommentForm(): JSX.Element | null {
   const [rating, setRating] = useState<number | null>(null);
   const [review, setReview] = useState<string>('');
+  const dispatch = useDispatch<AppDispatch>();
+  const { id } = useParams<{ id: string }>();
+
+  const isAuthorized = useSelector(
+    (state: RootState) =>
+      state.auth.authorizationStatus === AuthorizationStatus.Auth
+  );
+
+  if (!isAuthorized) {
+    return null;
+  }
 
   const handleRatingChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setRating(Number(evt.target.value));
@@ -12,11 +28,14 @@ function CommentForm(): JSX.Element {
     setReview(evt.target.value);
   };
 
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-
-    setRating(null);
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!id || rating === null || review.length < 50) {
+      return;
+    }
+    dispatch(postReview(id, review, rating));
     setReview('');
+    setRating(null);
   };
 
   const isSubmitDisabled = review.length < 50 || rating === null;

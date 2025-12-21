@@ -1,9 +1,7 @@
 import { ThunkAction } from 'redux-thunk';
-import api from '../../api';
 import { Review, ReviewsState } from './types';
 import { RootState } from '..';
-import { AxiosError } from 'axios';
-
+import { AxiosError, AxiosInstance } from 'axios';
 
 const initialState: ReviewsState = {
   reviews: [],
@@ -37,8 +35,8 @@ const loadReviewsFailure = (error: string) => ({
 export const loadReviews =
   (
     offerId: number
-  ): ThunkAction<Promise<void>, RootState, typeof api, ReviewsAction> =>
-    async (dispatch) => {
+  ): ThunkAction<Promise<void>, RootState, AxiosInstance, ReviewsAction> =>
+    async (dispatch, _getState, api) => {
       dispatch(loadReviewsStart());
 
       try {
@@ -76,3 +74,19 @@ export default function reviewsReducer(
       return state;
   }
 }
+
+export const postReview =
+  (
+    offerId: string,
+    comment: string,
+    rating: number
+  ): ThunkAction<Promise<void>, RootState, AxiosInstance, ReviewsAction> =>
+    async (dispatch, _getState, api) => {
+      await api.post(`/comments/${offerId}`, {
+        comment,
+        rating,
+      });
+
+      const { data } = await api.get<Review[]>(`/comments/${offerId}`);
+      dispatch(loadReviewsSuccess(data));
+    };
