@@ -1,9 +1,9 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { postReview } from '../../store/reviews/reducer';
-import type { AppDispatch, RootState } from '../../store';
+import type { AppDispatch } from '../../store';
 import { useParams } from 'react-router-dom';
-import { AuthorizationStatus } from '../../const';
+import { selectIsAuthorized } from '../../store/auth/selectors';
 
 function CommentForm(): JSX.Element | null {
   const [rating, setRating] = useState<number | null>(null);
@@ -11,10 +11,7 @@ function CommentForm(): JSX.Element | null {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams<{ id: string }>();
 
-  const isAuthorized = useSelector(
-    (state: RootState) =>
-      state.auth.authorizationStatus === AuthorizationStatus.Auth
-  );
+  const isAuthorized = useSelector(selectIsAuthorized);
 
   if (!isAuthorized) {
     return null;

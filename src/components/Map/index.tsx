@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import leaflet, { Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Offer } from '../../store/offers/types';
+import React from 'react';
 
 type MapProps = {
   offers: Offer[];
@@ -58,4 +59,5 @@ const Map = ({
   return <section className={className} ref={mapRef}></section>;
 };
 
-export default Map;
+const MemoizedMap = React.memo(Map);
+export default MemoizedMap;

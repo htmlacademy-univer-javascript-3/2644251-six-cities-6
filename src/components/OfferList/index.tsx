@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import OfferCard from '../OfferCard';
 import { Offer } from '../../store/offers/types.ts';
+import React from 'react';
 
 type OfferListProps = {
   offers: Offer[];
@@ -35,4 +36,5 @@ function OfferList({ offers, onHoverOffer }: OfferListProps) {
   );
 }
 
-export default OfferList;
+const MemoizedOfferList = React.memo(OfferList);
+export default MemoizedOfferList;

@@ -1,23 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '../../store';
-import ReviewList from '../../components/ReviewList';
+import { AppDispatch } from '../../store';
+import MemoizedReviewList from '../../components/ReviewList';
 import CommentForm from '../../components/CommentForm';
-import Map from '../../components/Map';
-import OfferList from '../../components/OfferList';
+import MemoizedMap from '../../components/Map';
+import MemoizedOfferList from '../../components/OfferList';
 import { loadOfferPage } from '../../store/offer/reducer';
 import Spinner from '../../components/Spinner';
+import { selectNearbyOffers, selectOffer, selectOfferError, selectOfferLoading, selectReviews } from '../../store/offer/selectors';
 
 function Offer(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { offer, nearbyOffers, reviews, isLoading, hasError } = useSelector(
-    (state: RootState) => state.offer
-  );
+  const offer = useSelector(selectOffer);
+  const nearbyOffers = useSelector(selectNearbyOffers);
+  const reviews = useSelector(selectReviews);
+  const isLoading = useSelector(selectOfferLoading);
+  const hasError = useSelector(selectOfferError);
 
   const [hoveredOfferId, setHoveredOfferId] = useState<number | null>(null);
+
+  const images = useMemo(() => offer?.images ?? [], [offer]);
+  const goods = useMemo(() => offer?.goods ?? [], [offer]);
 
   useEffect(() => {
     if (id) {
@@ -78,7 +84,7 @@ function Offer(): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {offer.images.map((img) => (
+              {images.map((img) => (
                 <div className="offer__image-wrapper" key={img}>
                   <img className="offer__image" src={img} alt="Photo studio" />
                 </div>
@@ -137,7 +143,7 @@ function Offer(): JSX.Element {
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
                 <ul className="offer__inside-list">
-                  {offer.goods.map((good) => (
+                  {goods.map((good) => (
                     <li className="offer__inside-item" key={good}>
                       {good}
                     </li>
@@ -169,13 +175,13 @@ function Offer(): JSX.Element {
               </div>
 
               <section className="offer__reviews reviews">
-                <ReviewList reviews={reviews} />
+                <MemoizedReviewList reviews={reviews} />
                 <CommentForm />
               </section>
             </div>
           </div>
 
-          <Map
+          <MemoizedMap
             offers={nearbyOffers}
             hoveredOfferId={hoveredOfferId}
             className="offer__map map"
@@ -187,7 +193,10 @@ function Offer(): JSX.Element {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <OfferList offers={nearbyOffers} onHoverOffer={setHoveredOfferId} />
+            <MemoizedOfferList
+              offers={nearbyOffers}
+              onHoverOffer={setHoveredOfferId}
+            />
           </section>
         </div>
       </main>

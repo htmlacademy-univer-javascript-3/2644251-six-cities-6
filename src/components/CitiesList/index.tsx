@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
 import { setCity } from '../../store/offers/reducer';
+import { selectActiveCity } from '../../store/offers/selectors';
 
 const cities = [
   'Paris',
@@ -13,7 +13,7 @@ const cities = [
 
 export default function CitiesList() {
   const dispatch = useDispatch();
-  const activeCity = useSelector((state: RootState) => state.offers.city);
+  const activeCity = useSelector(selectActiveCity);
 
   return (
     <ul className="locations__list tabs__list">
