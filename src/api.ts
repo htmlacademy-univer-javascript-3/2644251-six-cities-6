@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const BASE_URL = 'https://14.design.htmlacademy.pro/six-cities';
+import { BASE_URL } from './const';
 
 const api = axios.create({
   baseURL: BASE_URL,

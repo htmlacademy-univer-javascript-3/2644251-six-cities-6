@@ -4,6 +4,7 @@ import { postReview } from '../../store/reviews/reducer';
 import type { AppDispatch } from '../../store';
 import { useParams } from 'react-router-dom';
 import { selectIsAuthorized } from '../../store/auth/selectors';
+import { RATING_TITLES } from '../../const';
 
 function CommentForm(): JSX.Element | null {
   const [rating, setRating] = useState<number | null>(null);
@@ -58,9 +59,7 @@ function CommentForm(): JSX.Element | null {
             <label
               htmlFor={`${star}-stars`}
               className="reviews__rating-label form__rating-label"
-              title={
-                ['terribly', 'badly', 'not bad', 'good', 'perfect'][5 - star]
-              }
+              title={RATING_TITLES[5 - star]}
             >
               <svg className="form__star-image" width="37" height="33">
                 <use xlinkHref="#icon-star"></use>

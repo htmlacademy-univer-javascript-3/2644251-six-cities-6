@@ -1,5 +1,8 @@
 import classNames from 'classnames';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { AppDispatch } from '../../store';
+import { toggleFavorite } from '../../store/offers/reducer';
 
 type OfferCardProps = {
   id: number;
@@ -23,6 +26,12 @@ function OfferCard({
   isFavorite = false,
 }: OfferCardProps): JSX.Element {
   const ratingWidth = `${(rating / 5) * 100}%`;
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleFavoriteClick = () => {
+    dispatch(toggleFavorite(id, isFavorite));
+  };
 
   return (
     <article className="cities__card place-card">
@@ -54,6 +63,7 @@ function OfferCard({
               'place-card__bookmark-button--active': isFavorite,
             })}
             type="button"
+            onClick={handleFavoriteClick}
           >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>

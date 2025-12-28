@@ -1,14 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-
-import {
-  loadOfferPage,
-  LOAD_START,
-  LOAD_SUCCESS,
-  SET_REVIEWS,
-  LOAD_ERROR,
-} from './reducer';
+import { LOAD_ERROR, LOAD_START, LOAD_SUCCESS, SET_REVIEWS } from '../../const';
+import { loadOfferPage } from './reducer';
 
 describe('offer async actions', () => {
   it('dispatches LOAD_START → LOAD_SUCCESS → SET_REVIEWS on success', async () => {

@@ -1,11 +1,7 @@
+import { LOAD_ERROR, LOAD_START, LOAD_SUCCESS, SET_REVIEWS } from '../../const';
 import { Offer } from '../offers/types';
 import { Review } from '../reviews/types';
-import offerPageReducer, {
-  LOAD_START,
-  LOAD_SUCCESS,
-  LOAD_ERROR,
-  SET_REVIEWS,
-} from './reducer';
+import offerPageReducer from './reducer';
 import type { OfferDetailed, OfferPageState } from './types';
 
 describe('offerPage reducer', () => {

@@ -2,12 +2,12 @@ import { Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';
 
-import MainPage from './pages/MainPage';
-import FavoritesPage from './pages/FavoritesPage';
-import LoginPage from './pages/LoginPage';
-import OfferPage from './pages/OfferPage';
-import NotFoundPage from './pages/NotFoundPage';
-import PrivateRoute from './components/PrivateRoute';
+import MainPage from './pages/main-page';
+import FavoritesPage from './pages/favorites-page';
+import LoginPage from './pages/login-page';
+import OfferPage from './pages/offer-page';
+import NotFoundPage from './pages/not-found-page';
+import PrivateRoute from './components/private-route';
 
 export default function AppRoutes(): JSX.Element {
   const offers = useSelector((state: RootState) => state.offers.offers);

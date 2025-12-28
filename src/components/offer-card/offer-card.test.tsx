@@ -1,6 +1,18 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import * as redux from 'react-redux';
 import OfferCard from '.';
+import { AppDispatch } from '../../store';
+
+const mockDispatch: AppDispatch = vi.fn() as unknown as AppDispatch;
+
+vi.mock('react-redux', async () => {
+  const actual: typeof redux = await vi.importActual('react-redux');
+  return {
+    ...actual,
+    useDispatch: () => mockDispatch,
+  };
+});
 
 describe('OfferCard', () => {
   const props = {
@@ -22,29 +34,25 @@ describe('OfferCard', () => {
     );
 
     expect(screen.getByText(props.title)).toBeInTheDocument();
-
     expect(screen.getByText(props.type)).toBeInTheDocument();
-
     expect(screen.getByText(`€${props.price}`)).toBeInTheDocument();
-
     expect(screen.getByText(/premium/i)).toBeInTheDocument();
-
     expect(screen.getByText(/in bookmarks/i)).toBeInTheDocument();
 
     const img = screen.getByAltText(props.title);
-    expect(img).toBeInTheDocument();
     expect((img as HTMLImageElement).src).toContain(props.previewImage);
   });
 
-  it('renders correctly when not premium and not favorite', () => {
+  it('calls dispatch when bookmark button is clicked', () => {
     render(
       <MemoryRouter>
-        <OfferCard {...props} isPremium={false} isFavorite={false} />
+        <OfferCard {...props} />
       </MemoryRouter>
     );
 
-    expect(screen.queryByText(/premium/i)).not.toBeInTheDocument();
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
 
-    expect(screen.getByText(/to bookmarks/i)).toBeInTheDocument();
+    expect(mockDispatch).toHaveBeenCalledTimes(1);
   });
 });

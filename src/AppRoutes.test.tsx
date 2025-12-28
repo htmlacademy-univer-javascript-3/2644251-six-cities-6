@@ -9,7 +9,10 @@ describe('Application routing', () => {
     renderWithProviders(<AppRoutes />, {
       route: '/',
       preloadedState: createTestState({
-        auth: { authorizationStatus: AuthorizationStatus.Auth },
+        auth: {
+          authorizationStatus: AuthorizationStatus.Auth,
+          userEmail: null
+        },
       }),
     });
 
@@ -31,7 +34,10 @@ describe('Application routing', () => {
     renderWithProviders(<AppRoutes />, {
       route: '/favorites',
       preloadedState: createTestState({
-        auth: { authorizationStatus: AuthorizationStatus.NoAuth },
+        auth: {
+          authorizationStatus: AuthorizationStatus.NoAuth,
+          userEmail: null
+        },
       }),
     });
 

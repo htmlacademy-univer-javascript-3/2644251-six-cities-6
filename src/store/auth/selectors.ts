@@ -13,3 +13,5 @@ export const selectIsAuthorized = createSelector(
   selectAuthStatus,
   (status) => status === AuthorizationStatus.Auth
 );
+
+export const selectUserEmail = (state: RootState) => state.auth.userEmail;

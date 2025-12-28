@@ -1,16 +1,10 @@
 import { useState } from 'react';
+import { SORTING } from '../../const';
 
 type SortOptionsProps = {
   value: string;
   onChange: (newValue: string) => void;
 };
-
-const SORTING = [
-  { value: 'Popular', label: 'Popular' },
-  { value: 'PriceLowHigh', label: 'Price: low to high' },
-  { value: 'PriceHighLow', label: 'Price: high to low' },
-  { value: 'TopRated', label: 'Top rated first' },
-];
 
 const SortOptions = ({ value, onChange }: SortOptionsProps) => {
   const [isOpen, setIsOpen] = useState(false);

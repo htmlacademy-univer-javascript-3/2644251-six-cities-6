@@ -2,16 +2,17 @@ import { ThunkAction } from 'redux-thunk';
 import { Review, ReviewsState } from './types';
 import { RootState } from '..';
 import { AxiosError, AxiosInstance } from 'axios';
+import {
+  LOAD_REVIEWS_FAILURE,
+  LOAD_REVIEWS_START,
+  LOAD_REVIEWS_SUCCESS,
+} from '../../const';
 
 const initialState: ReviewsState = {
   reviews: [],
   isLoading: false,
   error: null,
 };
-
-const LOAD_REVIEWS_START = 'reviews/loadStart';
-const LOAD_REVIEWS_SUCCESS = 'reviews/loadSuccess';
-const LOAD_REVIEWS_FAILURE = 'reviews/loadFailure';
 
 export type ReviewsAction =
   | ReturnType<typeof loadReviewsStart>
