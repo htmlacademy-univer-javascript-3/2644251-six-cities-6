@@ -1,11 +1,11 @@
 import MemoizedOfferList from '../../components/offer-list';
-import MemoizedMap from '../../components/map';
+import MemoizedMap from '../../components/map-component';
 import CitiesList from '../../components/cities-list';
 import SortOptions from '../../components/sort-options';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useMemo, useState } from 'react';
-import Spinner from '../../components/spinner';
+import Spinner from '../../components/spinner-component';
 import { AuthorizationStatus } from '../../const';
 import {
   selectActiveCity,

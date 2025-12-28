@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store';
 import MemoizedReviewList from '../../components/review-list';
 import CommentForm from '../../components/comment-form';
-import MemoizedMap from '../../components/map';
+import MemoizedMap from '../../components/map-component';
 import MemoizedOfferList from '../../components/offer-list';
 import { loadOfferPage } from '../../store/offer/reducer';
-import Spinner from '../../components/spinner';
+import Spinner from '../../components/spinner-component';
 import {
   selectNearbyOffers,
   selectOffer,
