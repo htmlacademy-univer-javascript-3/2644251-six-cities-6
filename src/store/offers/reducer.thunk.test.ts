@@ -1,44 +1,49 @@
 import { describe, it, expect, vi } from 'vitest';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-
-import { loadOffers } from './reducer';
+import { toggleFavorite } from './reducer';
 
 describe('offers async actions', () => {
-  it('dispatches LOAD_OFFERS_START → LOAD_OFFERS_SUCCESS', async () => {
+  it('dispatches TOGGLE_FAVORITE_START → TOGGLE_FAVORITE_SUCCESS', async () => {
     const api = axios.create();
     const mock = new MockAdapter(api);
 
-    mock.onGet('/offers').reply(200, [{ id: 1 }]);
+    const offerId = 1;
+    const isFavorite = false;
+
+    const updatedOffer = { id: offerId, isFavorite: true };
+    mock.onPost(`/favorite/${offerId}/1`).reply(200, updatedOffer);
 
     const dispatch = vi.fn();
     const getState = vi.fn();
 
-    await loadOffers()(dispatch, getState, api);
+    await toggleFavorite(offerId, isFavorite)(dispatch, getState, api);
 
     expect(dispatch).toHaveBeenNthCalledWith(1, {
-      type: 'offers/LOAD_OFFERS_START',
+      type: 'offers/TOGGLE_FAVORITE_START',
     });
-
     expect(dispatch).toHaveBeenNthCalledWith(2, {
-      type: 'offers/LOAD_OFFERS_SUCCESS',
-      payload: [{ id: 1 }],
+      type: 'offers/TOGGLE_FAVORITE_SUCCESS',
+      payload: updatedOffer,
     });
   });
 
-  it('dispatches LOAD_OFFERS_FAILURE on error', async () => {
+  it('dispatches TOGGLE_FAVORITE_FAILURE on error', async () => {
     const api = axios.create();
     const mock = new MockAdapter(api);
 
-    mock.onGet('/offers').reply(500);
+    const offerId = 1;
+    const isFavorite = false;
+
+    mock.onPost(`/favorite/${offerId}/1`).reply(500);
 
     const dispatch = vi.fn();
     const getState = vi.fn();
 
-    await loadOffers()(dispatch, getState, api);
+    await toggleFavorite(offerId, isFavorite)(dispatch, getState, api);
 
     expect(dispatch).toHaveBeenLastCalledWith({
-      type: 'offers/LOAD_OFFERS_FAILURE',
+      type: 'offers/TOGGLE_FAVORITE_FAILURE',
       payload: 'Request failed with status code 500',
     });
   });

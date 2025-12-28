@@ -6,10 +6,12 @@ import { RootState } from '../index';
 
 export type AuthState = {
   authorizationStatus: AuthorizationStatus;
+  userEmail: string | null;
 };
 
 const initialState: AuthState = {
   authorizationStatus: AuthorizationStatus.Unknown,
+  userEmail: null,
 };
 
 const authSlice = createSlice({
@@ -19,13 +21,18 @@ const authSlice = createSlice({
     setAuthorizationStatus(state, action: PayloadAction<AuthorizationStatus>) {
       state.authorizationStatus = action.payload;
     },
+    setUserEmail(state, action: PayloadAction<string | null>) {
+      state.userEmail = action.payload;
+    },
   },
 });
 
-export const { setAuthorizationStatus } = authSlice.actions;
+export const { setAuthorizationStatus, setUserEmail } = authSlice.actions;
 export default authSlice.reducer;
 
-type AuthActions = ReturnType<typeof setAuthorizationStatus>;
+type AuthActions =
+  | ReturnType<typeof setAuthorizationStatus>
+  | ReturnType<typeof setUserEmail>;
 
 type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
@@ -58,4 +65,5 @@ export const login =
 
       localStorage.setItem('six-cities-token', response.data.token);
       dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+      dispatch(setUserEmail(email));
     };

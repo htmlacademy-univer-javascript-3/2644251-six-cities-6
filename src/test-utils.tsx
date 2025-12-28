@@ -56,6 +56,7 @@ export const createTestState = (overrides?: Partial<RootState>): RootState => ({
   },
   auth: {
     authorizationStatus: AuthorizationStatus.NoAuth,
+    userEmail: null
   },
   ...overrides,
 });

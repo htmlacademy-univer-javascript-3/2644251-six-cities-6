@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import OfferCard from '../OfferCard';
+import OfferCard from '../offer-card/index.tsx';
 import { Offer } from '../../store/offers/types.ts';
 import React from 'react';
 

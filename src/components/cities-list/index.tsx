@@ -1,15 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setCity } from '../../store/offers/reducer';
 import { selectActiveCity } from '../../store/offers/selectors';
-
-const cities = [
-  'Paris',
-  'Cologne',
-  'Brussels',
-  'Amsterdam',
-  'Hamburg',
-  'Dusseldorf',
-];
+import { CITIES } from '../../const';
 
 export default function CitiesList() {
   const dispatch = useDispatch();
@@ -17,7 +9,7 @@ export default function CitiesList() {
 
   return (
     <ul className="locations__list tabs__list">
-      {cities.map((city) => (
+      {CITIES.map((city) => (
         <li className="locations__item" key={city}>
           <a
             className={`locations__item-link tabs__item

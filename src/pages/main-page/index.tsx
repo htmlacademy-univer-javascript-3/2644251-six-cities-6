@@ -1,26 +1,38 @@
-import MemoizedOfferList from '../../components/OfferList';
-import MemoizedMap from '../../components/Map';
-import CitiesList from '../../components/CitiesList';
-import SortOptions from '../../components/SortOptions';
+import MemoizedOfferList from '../../components/offer-list';
+import MemoizedMap from '../../components/map';
+import CitiesList from '../../components/cities-list';
+import SortOptions from '../../components/sort-options';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useMemo, useState } from 'react';
-import Spinner from '../../components/Spinner';
+import Spinner from '../../components/spinner';
 import { AuthorizationStatus } from '../../const';
-import { selectActiveCity, selectAllOffers } from '../../store/offers/selectors';
-import { selectAuthStatus } from '../../store/auth/selectors';
+import {
+  selectActiveCity,
+  selectAllOffers,
+} from '../../store/offers/selectors';
+import { selectAuthStatus, selectUserEmail } from '../../store/auth/selectors';
 import { selectOfferLoading } from '../../store/offer/selectors';
+import { setAuthorizationStatus, setUserEmail } from '../../store/auth/reducer';
 
 function MainPage(): JSX.Element {
   const city = useSelector(selectActiveCity);
   const isLoading = useSelector(selectOfferLoading);
   const allOffers = useSelector(selectAllOffers);
   const offers = allOffers.filter((o) => o.city.name === city);
+  const favoriteCount = allOffers.filter((offer) => offer.isFavorite).length;
   const [hoveredOfferId, setHoveredOfferId] = useState<number | null>(null);
   const [sortType, setSortType] = useState('Popular');
   const handleHover = useCallback((id: number | null) => {
     setHoveredOfferId(id);
   }, []);
+
+  const dispatch = useDispatch();
+  const handleSignOut = () => {
+    localStorage.removeItem('six-cities-token');
+    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+    dispatch(setUserEmail(null));
+  };
 
   const authStatus = useSelector(selectAuthStatus);
 
@@ -36,6 +48,8 @@ function MainPage(): JSX.Element {
         return offers;
     }
   }, [sortType, offers]);
+
+  const userEmail = useSelector(selectUserEmail);
 
   const offerCount = offers.length;
   return (
@@ -64,11 +78,19 @@ function MainPage(): JSX.Element {
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                       <span className="header__user-name user__name">
-                        Oliver.conner@gmail.com
+                        {userEmail}
                       </span>
-                      <span className="header__favorite-count">3</span>
+                      <span className="header__favorite-count">
+                        {favoriteCount}
+                      </span>
                     </Link>
-                    <button className="header__logout">Sign out</button>
+                    <span
+                      className="header__signout"
+                      onClick={handleSignOut}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Sign out
+                    </span>
                   </li>
                 ) : (
                   <li className="header__nav-item">

@@ -4,11 +4,7 @@ import { Review } from '../reviews/types';
 import { ThunkAction } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { AxiosInstance } from 'axios';
-
-export const LOAD_START = 'offer/loadStart' as const;
-export const LOAD_SUCCESS = 'offer/loadSuccess' as const;
-export const LOAD_ERROR = 'offer/loadError' as const;
-export const SET_REVIEWS = 'offer/setReviews' as const;
+import { LOAD_ERROR, LOAD_START, LOAD_SUCCESS, SET_REVIEWS } from '../../const';
 
 export type LoadStartAction = {
   type: typeof LOAD_START;

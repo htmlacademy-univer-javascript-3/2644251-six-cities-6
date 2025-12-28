@@ -1,4 +1,4 @@
-import Review from '../Review';
+import Review from '../review';
 import { Review as ReviewType } from '../../store/reviews/types';
 import React from 'react';
 

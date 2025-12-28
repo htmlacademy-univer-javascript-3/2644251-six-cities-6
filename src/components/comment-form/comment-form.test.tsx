@@ -19,6 +19,7 @@ const renderWithStore = (isAuthorized: boolean) => {
         authorizationStatus: isAuthorized
           ? AuthorizationStatus.Auth
           : AuthorizationStatus.NoAuth,
+        userEmail: null
       },
       reviews: {
         reviews: [],

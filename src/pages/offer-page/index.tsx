@@ -1,14 +1,24 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../store';
-import MemoizedReviewList from '../../components/ReviewList';
-import CommentForm from '../../components/CommentForm';
-import MemoizedMap from '../../components/Map';
-import MemoizedOfferList from '../../components/OfferList';
+import MemoizedReviewList from '../../components/review-list';
+import CommentForm from '../../components/comment-form';
+import MemoizedMap from '../../components/map';
+import MemoizedOfferList from '../../components/offer-list';
 import { loadOfferPage } from '../../store/offer/reducer';
-import Spinner from '../../components/Spinner';
-import { selectNearbyOffers, selectOffer, selectOfferError, selectOfferLoading, selectReviews } from '../../store/offer/selectors';
+import Spinner from '../../components/spinner';
+import {
+  selectNearbyOffers,
+  selectOffer,
+  selectOfferError,
+  selectOfferLoading,
+  selectReviews,
+} from '../../store/offer/selectors';
+import { selectUserEmail } from '../../store/auth/selectors';
+import { selectAllOffers } from '../../store/offers/selectors';
+import { toggleFavorite } from '../../store/offers/reducer';
+import classNames from 'classnames';
 
 function Offer(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -20,10 +30,29 @@ function Offer(): JSX.Element {
   const isLoading = useSelector(selectOfferLoading);
   const hasError = useSelector(selectOfferError);
 
+  const allOffers = useSelector(selectAllOffers);
+  const favoriteCount = allOffers.filter((o) => o.isFavorite).length;
+
   const [hoveredOfferId, setHoveredOfferId] = useState<number | null>(null);
 
   const images = useMemo(() => offer?.images ?? [], [offer]);
   const goods = useMemo(() => offer?.goods ?? [], [offer]);
+
+  const userEmail = useSelector(selectUserEmail);
+
+  const [isFavorite, setIsFavorite] = useState(offer?.isFavorite ?? false);
+
+  useEffect(() => {
+    setIsFavorite(offer?.isFavorite ?? false);
+  }, [offer?.isFavorite]);
+
+  const handleBookmarkClick = () => {
+    if (!offer) {
+      return;
+    }
+    setIsFavorite((prev) => !prev);
+    dispatch(toggleFavorite(offer.id, offer.isFavorite ?? false));
+  };
 
   useEffect(() => {
     if (id) {
@@ -58,16 +87,18 @@ function Offer(): JSX.Element {
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a
+                  <Link
+                    to="/favorites"
                     className="header__nav-link header__nav-link--profile"
-                    href="#"
                   >
                     <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                     <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
+                      {userEmail}
                     </span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
+                    <span className="header__favorite-count">
+                      {favoriteCount}
+                    </span>
+                  </Link>
                 </li>
                 <li className="header__nav-item">
                   <a className="header__nav-link" href="/login">
@@ -102,11 +133,19 @@ function Offer(): JSX.Element {
 
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{offer.title}</h1>
-                <button className="offer__bookmark-button button" type="button">
+                <button
+                  className={classNames('offer__bookmark-button button', {
+                    'offer__bookmark-button--active': isFavorite,
+                  })}
+                  type="button"
+                  onClick={handleBookmarkClick}
+                >
                   <svg className="offer__bookmark-icon" width={31} height={33}>
                     <use xlinkHref="#icon-bookmark" />
                   </svg>
-                  <span className="visually-hidden">To bookmarks</span>
+                  <span className="visually-hidden">
+                    {isFavorite ? 'In bookmarks' : 'To bookmarks'}
+                  </span>
                 </button>
               </div>
 
