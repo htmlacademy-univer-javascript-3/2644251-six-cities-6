@@ -1,8 +1,11 @@
 import { FormEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { AppDispatch } from '../../store';
 import { login } from '../../store/auth/reducer';
+import { AuthorizationStatus, CITIES } from '../../const';
+import { setCity } from '../../store/offers/reducer';
+import { selectAuthStatus } from '../../store/auth/selectors';
 
 function Login(): JSX.Element {
   const dispatch = useDispatch<AppDispatch>();
@@ -11,12 +14,23 @@ function Login(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const getRandomCity = () => CITIES[Math.floor(Math.random() * CITIES.length)];
+
+  const [randomCity] = useState(() => getRandomCity());
+
+  const handleRandomCityClick = () => {
+    dispatch(setCity(randomCity));
+    navigate('/');
+  };
+
+  const authStatus = useSelector(selectAuthStatus);
+  if (authStatus === AuthorizationStatus.Auth) {
+    return <Navigate to="/" replace />;
+  }
+
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-
-    dispatch(login(email, password)).then(() => {
-      navigate('/');
-    });
+    dispatch(login(email, password));
   };
 
   return (
@@ -72,6 +86,8 @@ function Login(): JSX.Element {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  pattern="^(?=.*[A-Za-z])(?=.*\d).+$"
+                  title="Password must contain at least one letter and one number"
                 />
               </div>
               <button
@@ -81,6 +97,18 @@ function Login(): JSX.Element {
                 Sign in
               </button>
             </form>
+          </section>
+          <section className="locations locations--login locations--current">
+            <div className="locations__item">
+              <button
+                type="button"
+                className="locations__item-link"
+                onClick={handleRandomCityClick}
+                style={{ border: 'none' }}
+              >
+                <span>{randomCity}</span>
+              </button>
+            </div>
           </section>
         </div>
       </main>

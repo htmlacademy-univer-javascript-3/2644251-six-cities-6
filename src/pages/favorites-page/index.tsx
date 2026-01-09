@@ -7,6 +7,7 @@ import OfferCard from '../../components/offer-card';
 import { loadOffers } from '../../store/offers/reducer';
 import { Offer } from '../../store/offers/types';
 import { selectUserEmail } from '../../store/auth/selectors';
+import { setAuthorizationStatus, setUserEmail } from '../../store/auth/reducer';
 
 type FavoritesPageProps = {
   offers: Offer[];
@@ -55,6 +56,12 @@ function Favorites({ offers }: FavoritesPageProps): JSX.Element {
   const favoriteCount = favoriteOffers.length;
   const userEmail = useSelector(selectUserEmail);
 
+  const handleSignOut = () => {
+    localStorage.removeItem('six-cities-token');
+    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+    dispatch(setUserEmail(null));
+  };
+
   if (favoriteOffers.length === 0) {
     return (
       <div className="page page--favorites-empty">
@@ -74,25 +81,35 @@ function Favorites({ offers }: FavoritesPageProps): JSX.Element {
               </div>
               <nav className="header__nav">
                 <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <Link
-                      to="/favorites"
-                      className="header__nav-link header__nav-link--profile"
-                    >
-                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                      <span className="header__user-name user__name">
-                        {userEmail}
+                  {authStatus === AuthorizationStatus.Auth ? (
+                    <li className="header__nav-item user">
+                      <Link
+                        to="/favorites"
+                        className="header__nav-link header__nav-link--profile"
+                      >
+                        <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                        <span className="header__user-name user__name">
+                          {userEmail}
+                        </span>
+                        <span className="header__favorite-count">
+                          {favoriteCount}
+                        </span>
+                      </Link>
+                      <span
+                        className="header__signout"
+                        onClick={handleSignOut}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        Sign out
                       </span>
-                      <span className="header__favorite-count">
-                        {favoriteCount}
-                      </span>
-                    </Link>
-                  </li>
-                  <li className="header__nav-item">
-                    <Link to="/login" className="header__nav-link">
-                      <span className="header__signout">Sign in</span>
-                    </Link>
-                  </li>
+                    </li>
+                  ) : (
+                    <li className="header__nav-item">
+                      <Link to="/login" className="header__nav-link">
+                        <span className="header__signout">Sign in</span>
+                      </Link>
+                    </li>
+                  )}
                 </ul>
               </nav>
             </div>
@@ -128,25 +145,35 @@ function Favorites({ offers }: FavoritesPageProps): JSX.Element {
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link
-                    to="/favorites"
-                    className="header__nav-link header__nav-link--profile"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                      {userEmail}
+                {authStatus === AuthorizationStatus.Auth ? (
+                  <li className="header__nav-item user">
+                    <Link
+                      to="/favorites"
+                      className="header__nav-link header__nav-link--profile"
+                    >
+                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <span className="header__user-name user__name">
+                        {userEmail}
+                      </span>
+                      <span className="header__favorite-count">
+                        {favoriteCount}
+                      </span>
+                    </Link>
+                    <span
+                      className="header__signout"
+                      onClick={handleSignOut}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Sign out
                     </span>
-                    <span className="header__favorite-count">
-                      {favoriteCount}
-                    </span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <Link to="/login" className="header__nav-link">
-                    <span className="header__signout">Sign in</span>
-                  </Link>
-                </li>
+                  </li>
+                ) : (
+                  <li className="header__nav-item">
+                    <Link to="/login" className="header__nav-link">
+                      <span className="header__signout">Sign in</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
           </div>

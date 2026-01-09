@@ -15,10 +15,12 @@ import {
   selectOfferLoading,
   selectReviews,
 } from '../../store/offer/selectors';
-import { selectUserEmail } from '../../store/auth/selectors';
+import { selectAuthStatus, selectUserEmail } from '../../store/auth/selectors';
 import { selectAllOffers } from '../../store/offers/selectors';
 import { toggleFavorite } from '../../store/offers/reducer';
 import classNames from 'classnames';
+import { setAuthorizationStatus, setUserEmail } from '../../store/auth/reducer';
+import { AuthorizationStatus } from '../../const';
 
 function Offer(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -46,6 +48,16 @@ function Offer(): JSX.Element {
     setIsFavorite(offer?.isFavorite ?? false);
   }, [offer?.isFavorite]);
 
+  const sortedReviews = useMemo(
+    () =>
+      [...reviews]
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 10),
+    [reviews]
+  );
+
+  const authStatus = useSelector(selectAuthStatus);
+
   const handleBookmarkClick = () => {
     if (!offer) {
       return;
@@ -68,6 +80,12 @@ function Offer(): JSX.Element {
     return <Navigate to="/404" replace />;
   }
 
+  const handleSignOut = () => {
+    localStorage.removeItem('six-cities-token');
+    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+    dispatch(setUserEmail(null));
+  };
+
   return (
     <div className="page">
       <header className="header">
@@ -86,25 +104,35 @@ function Offer(): JSX.Element {
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link
-                    to="/favorites"
-                    className="header__nav-link header__nav-link--profile"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                      {userEmail}
+                {authStatus === AuthorizationStatus.Auth ? (
+                  <li className="header__nav-item user">
+                    <Link
+                      to="/favorites"
+                      className="header__nav-link header__nav-link--profile"
+                    >
+                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <span className="header__user-name user__name">
+                        {userEmail}
+                      </span>
+                      <span className="header__favorite-count">
+                        {favoriteCount}
+                      </span>
+                    </Link>
+                    <span
+                      className="header__signout"
+                      onClick={handleSignOut}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      Sign out
                     </span>
-                    <span className="header__favorite-count">
-                      {favoriteCount}
-                    </span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="/login">
-                    <span className="header__signout">Sign in</span>
-                  </a>
-                </li>
+                  </li>
+                ) : (
+                  <li className="header__nav-item">
+                    <Link to="/login" className="header__nav-link">
+                      <span className="header__signout">Sign in</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
           </div>
@@ -214,7 +242,7 @@ function Offer(): JSX.Element {
               </div>
 
               <section className="offer__reviews reviews">
-                <MemoizedReviewList reviews={reviews} />
+                <MemoizedReviewList reviews={sortedReviews} />
                 <CommentForm />
               </section>
             </div>
